@@ -43,6 +43,7 @@
   --font-semibold: "Quicksand-SemiBold", sans-serif;
 
   --shadow-md: 6px 6px 12px #9f9f9f, -6px -6px 12px #ffffff;
+  --inset-shadow-md: inset 2px 2px 5px #b8b9be, inset -3px -3px 7px #ffffff;
 }
 
 * {
@@ -51,5 +52,5 @@
 
 body {
   background-color: var(--color-primary);
-  padding: 2rem;
+  padding: 2rem 5rem;
 }

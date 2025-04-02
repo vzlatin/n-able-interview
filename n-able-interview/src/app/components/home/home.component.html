@@ -1,5 +1,16 @@
-<div class="grid grid-cols-2 gap-10 items-center">
-  @for (user of (users$ | async); track user.id) {
-  <app-user-card [user]="user"></app-user-card>
-  }
+<div class="flex flex-row justify-center">
+  <div>
+    <input
+      type="text"
+      name="search"
+      placeholder="Search"
+      class="bg-color-primary bg-[url(/search.svg)] bg-no-repeat inset-shadow-md rounded-md pl-8 pr-5 py-2 bg-[0.3rem_center] font-regular color-font"
+    />
+  </div>
+
+  <div class="grid grid-cols-2 gap-10">
+    <!--@for (user of (users$ | async); track user.id) {-->
+    <!--<app-user-card [user]="user"></app-user-card>-->
+    <!--}-->
+  </div>
 </div>
