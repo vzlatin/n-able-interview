@@ -23,7 +23,7 @@ export class GithubService {
     null,
   );
 
-  users$: Observable<UserCard[]> = this.http.get<UserCard[]>(
+  userCards$: Observable<UserCard[]> = this.http.get<UserCard[]>(
     `${environment.baseUrl}/users?per_page=${environment.itemsPerPage}`,
   ).pipe(
     map((users: UserCard[]) =>
@@ -34,7 +34,7 @@ export class GithubService {
       }))
     ),
   );
-  usersError$: Observable<Error> = this.users$.pipe(
+  userCardsError$: Observable<Error> = this.userCards$.pipe(
     ignoreElements(),
     catchError((err: Error) => of(err)),
   );

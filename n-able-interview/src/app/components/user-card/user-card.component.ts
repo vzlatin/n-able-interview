@@ -10,9 +10,9 @@ import { Router } from "@angular/router";
 })
 export class UserCardComponent {
   router = inject(Router);
-  user = input.required<UserCard>();
+  userCard = input.required<UserCard>();
 
   selectUser(): void {
-    this.router.navigate(["users", this.user().login]);
+    this.router.navigate(["users", this.userCard().login]);
   }
 }
