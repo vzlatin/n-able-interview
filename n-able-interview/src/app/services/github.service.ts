@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { catchError, ignoreElements, map, Observable, of } from "rxjs";
-import { UserCard } from "../types/entities";
+import { UserCard } from "../types/user-card";
 import { environment } from "../../environments/environment.development";
 
 @Injectable({
