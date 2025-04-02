@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { catchError, ignoreElements, map, Observable, of } from "rxjs";
-import { User } from "../types/entities";
+import { UserCard } from "../types/entities";
 import { environment } from "../../environments/environment.development";
 
 @Injectable({
@@ -11,11 +11,11 @@ export class GithubService {
   http = inject(HttpClient);
   constructor() {}
 
-  users$: Observable<User[]> = this.http.get<User[]>(
+  users$: Observable<UserCard[]> = this.http.get<UserCard[]>(
     `${environment.baseUrl}/users?per_page=${environment.itemsPerPage}`,
   ).pipe(
-    map((users: User[]) =>
-      users.map((user: User) => ({
+    map((users: UserCard[]) =>
+      users.map((user: UserCard) => ({
         ...user,
         name: user.name ?? "Name: N/A",
         email: user.email ?? "Email: N/A",

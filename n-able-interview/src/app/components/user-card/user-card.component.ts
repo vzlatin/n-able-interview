@@ -1,5 +1,5 @@
 import { Component, input } from "@angular/core";
-import { User } from "../../types/entities";
+import { UserCard } from "../../types/entities";
 
 @Component({
   selector: "app-user-card",
@@ -8,5 +8,5 @@ import { User } from "../../types/entities";
   styleUrl: "./user-card.component.css",
 })
 export class UserCardComponent {
-  user = input.required<User>();
+  user = input.required<UserCard>();
 }
