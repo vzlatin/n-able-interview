@@ -1,15 +1,27 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { catchError, ignoreElements, map, Observable, of } from "rxjs";
+import {
+  BehaviorSubject,
+  catchError,
+  filter,
+  ignoreElements,
+  map,
+  Observable,
+  of,
+  switchMap,
+} from "rxjs";
 import { UserCard } from "../types/user-card";
 import { environment } from "../../environments/environment.development";
+import { User } from "../types/user";
 
 @Injectable({
   providedIn: "root",
 })
 export class GithubService {
-  http = inject(HttpClient);
-  constructor() {}
+  private http = inject(HttpClient);
+  private selectedUserBehaviorSubject = new BehaviorSubject<string | null>(
+    null,
+  );
 
   users$: Observable<UserCard[]> = this.http.get<UserCard[]>(
     `${environment.baseUrl}/users?per_page=${environment.itemsPerPage}`,
@@ -26,4 +38,21 @@ export class GithubService {
     ignoreElements(),
     catchError((err: Error) => of(err)),
   );
+
+  user$: Observable<User> = this.selectedUserBehaviorSubject.pipe(
+    filter(Boolean),
+    switchMap((username) =>
+      this.http.get<User>(
+        `${environment.baseUrl}/users/${username}`,
+      )
+    ),
+  );
+  userError$: Observable<Error> = this.user$.pipe(
+    ignoreElements(),
+    catchError((err: Error) => of(err)),
+  );
+
+  selectUser(username: string): void {
+    this.selectedUserBehaviorSubject.next(username);
+  }
 }

@@ -11,12 +11,13 @@ import { Router } from "@angular/router";
   styleUrl: "./home.component.css",
 })
 export class HomeComponent {
-  githubService = inject(GithubService);
+  private githubService = inject(GithubService);
+  private router = inject(Router);
+
   users$ = this.githubService.users$;
   usersError$ = this.githubService.usersError$;
 
-  constructor(private router: Router) {}
-
+  constructor() {}
   goToUser(username: string): void {
     this.router.navigate(["users", username]);
   }

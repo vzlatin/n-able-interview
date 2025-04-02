@@ -1,1 +1,7 @@
-<p>user-profile works!</p>
+<div>
+  @if ((user$ | async); as user) {
+  <div>
+    {{user.login}}
+  </div>
+  }
+</div>

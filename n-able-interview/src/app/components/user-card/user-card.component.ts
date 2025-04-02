@@ -1,14 +1,18 @@
-import { Component, input, output } from "@angular/core";
+import { Component, inject, input } from "@angular/core";
 import { UserCard } from "../../types/user-card";
-import { RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-user-card",
-  imports: [RouterLink],
+  imports: [],
   templateUrl: "./user-card.component.html",
   styleUrl: "./user-card.component.css",
 })
 export class UserCardComponent {
+  router = inject(Router);
   user = input.required<UserCard>();
-  navigationEmitter = output<string>();
+
+  selectUser(): void {
+    this.router.navigate(["users", this.user().login]);
+  }
 }
