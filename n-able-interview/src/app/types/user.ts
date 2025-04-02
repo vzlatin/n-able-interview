@@ -51,7 +51,7 @@ interface UserBase {
   ldap_dn?: string;
 }
 
-interface PrivateUser extends UserBase {
+export interface PrivateUser extends UserBase {
   private_gists: number;
   total_private_repos: number;
   owned_private_repos: number;
@@ -60,7 +60,7 @@ interface PrivateUser extends UserBase {
   two_factor_authentication: boolean;
 }
 
-interface PublicUser extends UserBase {
+export interface PublicUser extends UserBase {
   private_gists?: number;
   total_private_repos?: number;
   owned_private_repos?: number;

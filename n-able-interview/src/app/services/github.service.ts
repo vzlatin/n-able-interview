@@ -13,6 +13,8 @@ import {
 import { UserCard } from "../types/user-card";
 import { environment } from "../../environments/environment.development";
 import { User } from "../types/user";
+import { isPrivateUser } from "../typeguards/isPrivateUser";
+import { requiredKeys } from "../types/utils";
 
 @Injectable({
   providedIn: "root",
@@ -39,14 +41,19 @@ export class GithubService {
     catchError((err: Error) => of(err)),
   );
 
-  user$: Observable<User> = this.selectedUserBehaviorSubject.pipe(
-    filter(Boolean),
-    switchMap((username) =>
-      this.http.get<User>(
-        `${environment.baseUrl}/users/${username}`,
-      )
-    ),
-  );
+  user$: Observable<User & { type: string }> = this.selectedUserBehaviorSubject
+    .pipe(
+      filter(Boolean),
+      switchMap((username) =>
+        this.http.get<User>(
+          `${environment.baseUrl}/users/${username}`,
+        )
+      ),
+      map((user) => ({
+        ...user,
+        type: isPrivateUser(user, requiredKeys) ? "private" : "public",
+      })),
+    );
   userError$: Observable<Error> = this.user$.pipe(
     ignoreElements(),
     catchError((err: Error) => of(err)),
