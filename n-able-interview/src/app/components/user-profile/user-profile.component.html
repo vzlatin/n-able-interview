@@ -1,7 +1,31 @@
-<div class="w-500 mx-auto border-solid border-1 border-font">
+<div class="h-screen flex items-center justify-center">
   @if ((user$ | async); as user) {
-  <div>
-    {{user.login}} - {{user.type | titlecase }}
+  <div class="p-6 rounded-md shadow-md w-190 relative mx-auto">
+    <div
+      class="absolute -top-17 left-10 p-5 inset-shadow-md bg-primary rounded-md"
+    >
+      @if (user.avatar_url) {
+      <img
+        [src]="user.avatar_url"
+        class="rounded-md w-24 h-24 object-fit"
+      >
+      } @else {
+      <img src="/user-profile.svg" class="rounded-md w-24 h-24 object-cover">
+      }
+    </div>
+
+    <div class="pt-16">
+      <h3 class="text-lg font-semibold text-font-dark mb-1">
+        {{user.login}} - {{user.type | titlecase}} User
+      </h3>
+      <p class="text-sm text-font">
+        {{user.public_repos}} public repositories
+      </p>
+      <p class="text-sm text-font mb-4">
+        {{user.plan?.private_repos || 0}} private repositories
+      </p>
+      <div class="flex flex-col gap-2 mb-4"></div>
+    </div>
   </div>
   }
 </div>

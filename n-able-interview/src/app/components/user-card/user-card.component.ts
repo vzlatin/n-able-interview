@@ -15,4 +15,8 @@ export class UserCardComponent {
   selectUser(): void {
     this.router.navigate(["users", this.userCard().login]);
   }
+
+  stopPropagation(event: MouseEvent): void {
+    event.stopPropagation();
+  }
 }

@@ -12,7 +12,7 @@
   <div class="flex flex-col gap-3">
     <p class="font-regular color-font">{{userCard().name}}</p>
     <p class="font-regular color-font">{{userCard().email}}<p>
-      <a [href]=userCard().html_url target="_blank" >
+      <a [href]=userCard().html_url (click)="stopPropagation($event)" target="_blank" >
         <div class="flex gap-3 shadow-md hover:shadow-none hover:inset-shadow-md p-2 rounded-md border-1 border-solid border-accent">
           <p class="font-regular color-font">{{userCard().login}}</p>
           <img src="/github-icon.svg" />
