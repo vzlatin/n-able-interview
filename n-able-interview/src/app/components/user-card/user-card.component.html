@@ -1,0 +1,20 @@
+<div class="w-120 max-w-120 shadow-md primary rounded-md p-8 flex flex-row gap-10 items-center hover:shadow-none hover:inset-shadow-md active:inset-shadow-md hover:cursor-pointer">
+  <div class="flex flex-col items-center">
+    @if (!user().avatar_url) {
+    <img src="/user-profile.svg" class="rounded-md" />
+    } @else {
+    <img [src]=user().avatar_url class="w-30 h-30 min-w-30 rounded-md" />
+    }
+  </div>
+
+  <div class="flex flex-col gap-3">
+    <p class="font-regular color-font">{{user().name}}</p>
+    <p class="font-regular color-font">{{user().email}}<p>
+      <a [href]=user().html_url target="_blank" >
+        <div class="flex gap-3 shadow-md hover:shadow-none hover:inset-shadow-md p-2 rounded-md">
+          <p class="font-regular color-font">{{user().login}}</p>
+          <img src="/github-icon.svg" />
+        </div>
+      </a>
+  </div>
+</div>
