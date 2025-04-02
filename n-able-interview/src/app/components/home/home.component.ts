@@ -14,8 +14,8 @@ export class HomeComponent {
   private githubService = inject(GithubService);
   private router = inject(Router);
 
-  users$ = this.githubService.users$;
-  usersError$ = this.githubService.usersError$;
+  userCards$ = this.githubService.userCards$;
+  usersError$ = this.githubService.userCardsError$;
 
   constructor() {}
   goToUser(username: string): void {

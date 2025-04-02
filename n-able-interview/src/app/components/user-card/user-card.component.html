@@ -2,19 +2,19 @@
   (click)="selectUser()"
 >
   <div class="flex flex-col items-center">
-    @if (!user().avatar_url) {
+    @if (!userCard().avatar_url) {
     <img src="/user-profile.svg" class="rounded-md" />
     } @else {
-    <img [src]=user().avatar_url class="w-30 h-30 min-w-30 rounded-md" />
+    <img [src]=userCard().avatar_url class="w-30 h-30 min-w-30 rounded-md" />
     }
   </div>
 
   <div class="flex flex-col gap-3">
-    <p class="font-regular color-font">{{user().name}}</p>
-    <p class="font-regular color-font">{{user().email}}<p>
-      <a [href]=user().html_url target="_blank" >
+    <p class="font-regular color-font">{{userCard().name}}</p>
+    <p class="font-regular color-font">{{userCard().email}}<p>
+      <a [href]=userCard().html_url target="_blank" >
         <div class="flex gap-3 shadow-md hover:shadow-none hover:inset-shadow-md p-2 rounded-md">
-          <p class="font-regular color-font">{{user().login}}</p>
+          <p class="font-regular color-font">{{userCard().login}}</p>
           <img src="/github-icon.svg" />
         </div>
       </a>
