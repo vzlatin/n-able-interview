@@ -1,7 +1,7 @@
-<div>
+<div class="w-500 mx-auto border-solid border-1 border-font">
   @if ((user$ | async); as user) {
   <div>
-    {{user.login}}
+    {{user.login}} - {{user.type | titlecase }}
   </div>
   }
 </div>

@@ -1,7 +1,7 @@
-<div class="w-120 max-w-120 shadow-md primary rounded-md p-8 flex flex-row gap-10 items-center hover:shadow-none hover:inset-shadow-md active:inset-shadow-md hover:cursor-pointer"
+<div class="w-120 max-w-120 shadow-md primary rounded-md p-8 flex flex-row gap-10 items-center hover:shadow-none hover:inset-shadow-md active:inset-shadow-md hover:cursor-pointer border-1 border-solid border-accent"
   (click)="selectUser()"
 >
-  <div class="flex flex-col items-center">
+  <div class="flex flex-col items-center p-5">
     @if (!userCard().avatar_url) {
     <img src="/user-profile.svg" class="rounded-md" />
     } @else {
@@ -13,7 +13,7 @@
     <p class="font-regular color-font">{{userCard().name}}</p>
     <p class="font-regular color-font">{{userCard().email}}<p>
       <a [href]=userCard().html_url target="_blank" >
-        <div class="flex gap-3 shadow-md hover:shadow-none hover:inset-shadow-md p-2 rounded-md">
+        <div class="flex gap-3 shadow-md hover:shadow-none hover:inset-shadow-md p-2 rounded-md border-1 border-solid border-accent">
           <p class="font-regular color-font">{{userCard().login}}</p>
           <img src="/github-icon.svg" />
         </div>
