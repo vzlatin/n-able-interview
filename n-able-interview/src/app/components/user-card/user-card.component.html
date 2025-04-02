@@ -1,4 +1,6 @@
-<div class="w-120 max-w-120 shadow-md primary rounded-md p-8 flex flex-row gap-10 items-center hover:shadow-none hover:inset-shadow-md active:inset-shadow-md hover:cursor-pointer">
+<div class="w-120 max-w-120 shadow-md primary rounded-md p-8 flex flex-row gap-10 items-center hover:shadow-none hover:inset-shadow-md active:inset-shadow-md hover:cursor-pointer"
+  (click)="selectUser()"
+>
   <div class="flex flex-col items-center">
     @if (!user().avatar_url) {
     <img src="/user-profile.svg" class="rounded-md" />

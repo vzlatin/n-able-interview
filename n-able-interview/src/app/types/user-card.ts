@@ -1,4 +1,4 @@
-export interface User {
+export interface UserCard {
   name?: string | null;
   email?: string | null;
   login: string;

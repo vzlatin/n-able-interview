@@ -1,5 +1,6 @@
-import { Component, input } from "@angular/core";
-import { User } from "../../types/entities";
+import { Component, inject, input } from "@angular/core";
+import { UserCard } from "../../types/user-card";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-user-card",
@@ -8,5 +9,10 @@ import { User } from "../../types/entities";
   styleUrl: "./user-card.component.css",
 })
 export class UserCardComponent {
-  user = input.required<User>();
+  router = inject(Router);
+  user = input.required<UserCard>();
+
+  selectUser(): void {
+    this.router.navigate(["users", this.user().login]);
+  }
 }
