@@ -9,6 +9,7 @@ import {
   map,
   Observable,
   of,
+  Subject,
   switchMap,
 } from "rxjs";
 import { UserCard } from "../types/user-card";
@@ -23,27 +24,27 @@ import { MinimalRepository } from "../types/repositories";
 })
 export class GithubService {
   private http = inject(HttpClient);
-  private selectedUserBehaviorSubject = new BehaviorSubject<string | null>(
-    null,
-  );
+  private selectedUserSubject = new Subject<string | null>();
+  private loadNextTenCards$ = new Subject<string | null>();
 
-  userCards$: Observable<UserCard[]> = this.http.get<UserCard[]>(
-    `${environment.baseUrl}/users?per_page=${environment.itemsPerPage}`,
-  ).pipe(
-    map((users: UserCard[]) =>
-      users.map((user: UserCard) => ({
-        ...user,
-        name: user.name ?? "Name: N/A",
-        email: user.email ?? "Email: N/A",
-      }))
+  userCards$ = this.loadNextTenCards$.pipe(
+    map((since) => since != null ? `&since=${since}` : ""),
+    switchMap((since) =>
+      this.http.get<UserCard[]>(
+        `${environment.baseUrl}/users?per_page=${environment.itemsPerPage}${since}`,
+      ).pipe(
+        map((users: UserCard[]) =>
+          users.map((user: UserCard) => ({
+            ...user,
+            name: user.name ?? "Name: N/A",
+            email: user.email ?? "Email: N/A",
+          }))
+        ),
+      )
     ),
   );
-  userCardsError$: Observable<Error> = this.userCards$.pipe(
-    ignoreElements(),
-    catchError((err: Error) => of(err)),
-  );
 
-  user$: Observable<User & { type: string }> = this.selectedUserBehaviorSubject
+  user$: Observable<User & { type: string }> = this.selectedUserSubject
     .pipe(
       filter(Boolean),
       switchMap((username) =>
@@ -58,7 +59,7 @@ export class GithubService {
     );
 
   repositories$: Observable<MinimalRepository[]> = this
-    .selectedUserBehaviorSubject
+    .selectedUserSubject
     .pipe(
       filter(Boolean),
       switchMap((username) =>
