@@ -9,8 +9,10 @@ import {
   map,
   Observable,
   of,
+  scan,
   Subject,
   switchMap,
+  tap,
 } from "rxjs";
 import { UserCard } from "../types/user-card";
 import { environment } from "../../environments/environment.development";
@@ -24,10 +26,10 @@ import { MinimalRepository } from "../types/repositories";
 })
 export class GithubService {
   private http = inject(HttpClient);
-  private selectedUserSubject = new Subject<string | null>();
-  private loadNextTenCards$ = new Subject<string | null>();
+  private selectedUserSubject = new BehaviorSubject<string | null>(null);
+  private loadNextTenCards$ = new BehaviorSubject<string | null>(null);
 
-  userCards$ = this.loadNextTenCards$.pipe(
+  userCards$: Observable<UserCard[]> = this.loadNextTenCards$.pipe(
     map((since) => since != null ? `&since=${since}` : ""),
     switchMap((since) =>
       this.http.get<UserCard[]>(
@@ -42,6 +44,15 @@ export class GithubService {
         ),
       )
     ),
+    scan(
+      (acc, newUserCards) => [...acc, ...newUserCards],
+      [] as UserCard[],
+    ),
+  );
+
+  userCardsError$ = this.userCards$.pipe(
+    ignoreElements(),
+    catchError((err: Error) => of(err)),
   );
 
   user$: Observable<User & { type: string }> = this.selectedUserSubject
@@ -86,6 +97,10 @@ export class GithubService {
     );
 
   selectUser(username: string): void {
-    this.selectedUserBehaviorSubject.next(username);
+    this.selectedUserSubject.next(username);
+  }
+
+  loadNextTenCards(userId: string | null): void {
+    this.loadNextTenCards$.next(userId);
   }
 }

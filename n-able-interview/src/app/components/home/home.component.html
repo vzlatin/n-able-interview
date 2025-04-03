@@ -9,8 +9,9 @@
   </div>
 
   <div class="grid grid-cols-2 gap-10">
-    @for (userCard of (userCards$ | async); track userCard.id) {
-    <app-user-card [userCard]="userCard"></app-user-card>
+    @for (userCard of (userCards$ | async); track userCard.id; let last = $last)
+    {
+    <app-user-card [userCard]="userCard" [isLast]="last"></app-user-card>
     }
   </div>
 </div>
