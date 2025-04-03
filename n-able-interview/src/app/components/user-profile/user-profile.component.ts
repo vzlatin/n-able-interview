@@ -11,7 +11,7 @@ import { map } from "rxjs";
 })
 export class UserProfileComponent {
   activatedRoute = inject(ActivatedRoute);
-  user$ = this.activatedRoute.data.pipe(
-    map((data) => data["user"]),
+  userWithRepositories$ = this.activatedRoute.data.pipe(
+    map((data) => data["userWithRepositories"]),
   );
 }

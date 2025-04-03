@@ -7,5 +7,5 @@ export const userResolver: ResolveFn<User> = (route) => {
   const githubService = inject(GithubService);
   const username = route.params["username"];
   githubService.selectUser(username);
-  return githubService.user$;
+  return githubService.userWithRepositories$;
 };
