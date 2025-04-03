@@ -57,7 +57,7 @@ export class GithubService {
         map((user) => ({
           data: {
             ...user,
-            type: isPrivateUser(user, requiredKeys) ? 'private' : 'public',
+            type: isPrivateUser(user) ? 'private' : 'public',
           },
           error: null,
         })),
