@@ -9,7 +9,7 @@ export const routes: Routes = [
     path: "users/:username",
     component: UserProfileComponent,
     resolve: {
-      user: userResolver,
+      userWithRepositories: userResolver,
     },
   },
   { path: "**", redirectTo: "", pathMatch: "full" },

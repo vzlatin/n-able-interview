@@ -1,8 +1,10 @@
 <div class="h-screen flex items-center justify-center">
-  @if ((user$ | async); as user) {
-  <div class="p-6 rounded-md shadow-md w-190 relative mx-auto">
+  @if ((userWithRepositories$ | async); as user) {
+  <div
+    class="p-6 rounded-md shadow-md w-190 relative mx-auto border-1 border-solid border-accent"
+  >
     <div
-      class="absolute -top-17 left-10 p-5 inset-shadow-md bg-primary rounded-md"
+      class="absolute -top-17 left-10 p-5 inset-shadow-md bg-primary rounded-md border-1 border-solid border-accent"
     >
       @if (user.avatar_url) {
       <img
@@ -18,13 +20,57 @@
       <h3 class="text-lg font-semibold text-font-dark mb-1">
         {{user.login}} - {{user.type | titlecase}} User
       </h3>
-      <p class="text-sm text-font">
-        {{user.public_repos}} public repositories
-      </p>
-      <p class="text-sm text-font mb-4">
-        {{user.plan?.private_repos || 0}} private repositories
-      </p>
-      <div class="flex flex-col gap-2 mb-4"></div>
+      <div class="flex gap-6">
+        <div>
+          <p class="text-sm text-font">
+            {{user.public_repos}} public repositories
+          </p>
+          <p class="text-sm text-font mb-4">
+            {{user.total_private_repos ?? 0}} private repositories
+          </p>
+        </div>
+        <div>
+          <p class="text-sm text-font">
+            {{user.followers}} followers
+          </p>
+          <p class="text-sm text-font mb-4">
+            {{user.following || 0}} following
+          </p>
+        </div>
+      </div>
+      <div
+        class="flex flex-col gap-2 mb-4 max-h-70 overflow-x-scroll inset-shadow-md rounded-md p-3 border-1 border-solid border-accent"
+      >
+        @for (repository of user.repositories; track repository.id) {
+        <a [href]="repository.html_url" target="_blank">
+          <div
+            class="p-2 shadow-md-short rounded-md p-3 border-1 border-solid border-accent flex gap-3 hover:shadow-none hover:shadow-md active:inset-shadow-md justify-between"
+          >
+            <div class="flex items-center">
+              <p>
+                [{{repository.full_name}} |
+                <span
+                  [class]="{
+                            'text-danger': repository.private,
+                            'text-success': !repository.private
+                          }"
+                >
+                  {{ repository.private ? 'private' : 'public' }}
+                </span>]
+              </p>
+            </div>
+            <div class="flex items-center ml-auto mr-2">
+              <img src="/star.svg" alt="star" />
+              <p>{{repository.stargazers_count ?? 0}} stars</p>
+            </div>
+            <div class="flex items-center gap-1 mr-2">
+              <img src="/fork.svg" alt="star" />
+              <p>forked {{repository.fork_count ?? 0}} times</p>
+            </div>
+          </div>
+        </a>
+        }
+      </div>
     </div>
   </div>
   }

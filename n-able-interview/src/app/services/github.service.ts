@@ -3,6 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import {
   BehaviorSubject,
   catchError,
+  combineLatest,
   filter,
   ignoreElements,
   map,
@@ -15,6 +16,7 @@ import { environment } from "../../environments/environment.development";
 import { User } from "../types/user";
 import { isPrivateUser } from "../typeguards/isPrivateUser";
 import { requiredKeys } from "../types/utils";
+import { MinimalRepository } from "../types/repositories";
 
 @Injectable({
   providedIn: "root",
@@ -54,10 +56,33 @@ export class GithubService {
         type: isPrivateUser(user, requiredKeys) ? "private" : "public",
       })),
     );
-  userError$: Observable<Error> = this.user$.pipe(
-    ignoreElements(),
-    catchError((err: Error) => of(err)),
+
+  repositories$: Observable<MinimalRepository[]> = this
+    .selectedUserBehaviorSubject
+    .pipe(
+      filter(Boolean),
+      switchMap((username) =>
+        this.http.get<MinimalRepository[]>(
+          `${environment.baseUrl}/users/${username}/repos`,
+        )
+      ),
+    );
+
+  userWithRepositories$ = combineLatest([
+    this.user$,
+    this.repositories$,
+  ]).pipe(
+    map(([user, repositories]) => ({
+      ...user,
+      repositories,
+    })),
   );
+
+  userWithRepositoriesError$: Observable<Error> = this.userWithRepositories$
+    .pipe(
+      ignoreElements(),
+      catchError((err: Error) => of(err)),
+    );
 
   selectUser(username: string): void {
     this.selectedUserBehaviorSubject.next(username);
