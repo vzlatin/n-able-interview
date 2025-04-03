@@ -10,7 +10,7 @@ import { map } from "rxjs";
   styleUrl: "./user-profile.component.css",
 })
 export class UserProfileComponent {
-  activatedRoute = inject(ActivatedRoute);
+  private activatedRoute = inject(ActivatedRoute);
   userWithRepositories$ = this.activatedRoute.data.pipe(
     map((data) => data["userWithRepositories"]),
   );
