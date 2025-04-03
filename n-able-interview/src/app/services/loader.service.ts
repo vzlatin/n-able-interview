@@ -7,15 +7,17 @@ import { BehaviorSubject } from 'rxjs';
 export class LoaderService {
 
   private loadCount: number = 0;
-  loadState: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  private loadState$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+  loadState = this.loadState$.asObservable();
 
   ShowLoader() {
     this.loadCount += 1;
-    this.loadState.next(true);
+    this.loadState$.next(true);
   }
 
   HideLoader() {
     this.loadCount = this.loadCount ? --this.loadCount : 0;
-    if (!this.loadCount) this.loadState.next(false);
+    if (!this.loadCount) this.loadState$.next(false);
   }
 }

@@ -19,7 +19,6 @@ export class VisibleDirective implements OnInit, AfterViewInit, OnDestroy {
   private threshold = 1;
   userId = input.required<number>();
   isLast = input.required<boolean>();
-
   lastUserVisible = output<string>();
 
   private observer: IntersectionObserver | undefined;

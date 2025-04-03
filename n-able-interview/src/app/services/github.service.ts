@@ -25,7 +25,7 @@ import { MinimalRepository } from "../types/repositories";
 })
 export class GithubService {
   private http = inject(HttpClient);
-  private selectedUserSubject = new BehaviorSubject<string | null>(null);
+  private selectedUserSubject$ = new BehaviorSubject<string | null>(null);
   private loadNextTenCards$ = new BehaviorSubject<string | null>(null);
 
   userCards$: Observable<UserCard[]> = this.loadNextTenCards$.pipe(
@@ -50,7 +50,7 @@ export class GithubService {
     ),
   );
 
-  user$: Observable<DataResponse<User>> = this.selectedUserSubject.pipe(
+  user$: Observable<DataResponse<User>> = this.selectedUserSubject$.pipe(
     filter(Boolean),
     switchMap((username) =>
       this.http.get<User>(`${environment.baseUrl}/users/${username}`).pipe(
@@ -66,7 +66,7 @@ export class GithubService {
     )
   );
   
-  repositories$: Observable<DataResponse<MinimalRepository[]>> = this.selectedUserSubject.pipe(
+  repositories$: Observable<DataResponse<MinimalRepository[]>> = this.selectedUserSubject$.pipe(
     filter(Boolean),
     switchMap((username) =>
       this.http.get<MinimalRepository[]>(`${environment.baseUrl}/users/${username}/repos`).pipe(
@@ -90,7 +90,7 @@ export class GithubService {
   
 
   selectUser(username: string): void {
-    this.selectedUserSubject.next(username);
+    this.selectedUserSubject$.next(username);
   }
 
   loadNextTenCards(userId: string | null): void {

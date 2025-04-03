@@ -11,8 +11,8 @@ import { GithubService } from "../../services/github.service";
   styleUrl: "./user-card.component.css",
 })
 export class UserCardComponent {
-  router = inject(Router);
-  githubService = inject(GithubService);
+  private router = inject(Router);
+  private githubService = inject(GithubService);
   userCard = input.required<UserCard>();
   isLast = input.required<boolean>();
 
