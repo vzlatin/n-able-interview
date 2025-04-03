@@ -1,24 +1,23 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import {
   BehaviorSubject,
   catchError,
   combineLatest,
   filter,
-  ignoreElements,
+  forkJoin,
   map,
   Observable,
   of,
   scan,
-  Subject,
   switchMap,
-  tap,
+  throwError,
 } from "rxjs";
 import { UserCard } from "../types/user-card";
 import { environment } from "../../environments/environment.development";
 import { User } from "../types/user";
 import { isPrivateUser } from "../typeguards/isPrivateUser";
-import { requiredKeys } from "../types/utils";
+import { DataResponse, requiredKeys, UserWithRepositoriesResponse } from "../types/utils";
 import { MinimalRepository } from "../types/repositories";
 
 @Injectable({
@@ -42,6 +41,7 @@ export class GithubService {
             email: user.email ?? "Email: N/A",
           }))
         ),
+        catchError(() => of([])),
       )
     ),
     scan(
@@ -50,51 +50,44 @@ export class GithubService {
     ),
   );
 
-  userCardsError$ = this.userCards$.pipe(
-    ignoreElements(),
-    catchError((err: Error) => of(err)),
+  user$: Observable<DataResponse<User>> = this.selectedUserSubject.pipe(
+    filter(Boolean),
+    switchMap((username) =>
+      this.http.get<User>(`${environment.baseUrl}/users/${username}`).pipe(
+        map((user) => ({
+          data: {
+            ...user,
+            type: isPrivateUser(user, requiredKeys) ? 'private' : 'public',
+          },
+          error: null,
+        })),
+        catchError(() => of({ data: null, error: 'Failed to load user data.' }))
+      )
+    )
   );
-
-  user$: Observable<User & { type: string }> = this.selectedUserSubject
-    .pipe(
-      filter(Boolean),
-      switchMap((username) =>
-        this.http.get<User>(
-          `${environment.baseUrl}/users/${username}`,
-        )
-      ),
-      map((user) => ({
-        ...user,
-        type: isPrivateUser(user, requiredKeys) ? "private" : "public",
-      })),
-    );
-
-  repositories$: Observable<MinimalRepository[]> = this
-    .selectedUserSubject
-    .pipe(
-      filter(Boolean),
-      switchMap((username) =>
-        this.http.get<MinimalRepository[]>(
-          `${environment.baseUrl}/users/${username}/repos`,
-        )
-      ),
-    );
-
-  userWithRepositories$ = combineLatest([
-    this.user$,
-    this.repositories$,
-  ]).pipe(
-    map(([user, repositories]) => ({
-      ...user,
-      repositories,
-    })),
+  
+  repositories$: Observable<DataResponse<MinimalRepository[]>> = this.selectedUserSubject.pipe(
+    filter(Boolean),
+    switchMap((username) =>
+      this.http.get<MinimalRepository[]>(`${environment.baseUrl}/users/${username}/repos`).pipe(
+        map((repositories) => ({
+          data: repositories,
+          error: null,
+        })),
+        catchError(() => of({ data: [], error: 'Failed to load repositories.' }))
+      )
+    )
   );
-
-  userWithRepositoriesError$: Observable<Error> = this.userWithRepositories$
-    .pipe(
-      ignoreElements(),
-      catchError((err: Error) => of(err)),
-    );
+  
+  userWithRepositories$: Observable<UserWithRepositoriesResponse> = combineLatest([this.user$, this.repositories$]).pipe(
+    map(([userResult, repoResult]) => ({
+      user: userResult.data,
+      userError: userResult.error,
+      repositories: repoResult.data,
+      repoError: repoResult.error,
+    }))
+  );
+  
 
   selectUser(username: string): void {
     this.selectedUserSubject.next(username);

@@ -49,6 +49,7 @@ interface UserBase {
   plan?: Plan;
   business_plus?: boolean;
   ldap_dn?: string;
+  private_or_public: string;
 }
 
 export interface PrivateUser extends UserBase {

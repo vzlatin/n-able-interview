@@ -1,60 +1,55 @@
 <div class="h-screen flex items-center justify-center">
-  @if ((userWithRepositories$ | async); as user) {
-  <div
-    class="p-6 rounded-md shadow-md w-190 relative mx-auto border-1 border-solid border-accent"
-  >
-    <div
-      class="absolute -top-17 left-10 p-5 inset-shadow-md bg-primary rounded-md border-1 border-solid border-accent"
-    >
-      @if (user.avatar_url) {
-      <img
-        [src]="user.avatar_url"
-        class="rounded-md w-24 h-24 object-fit"
-      >
+  @if ((userWithRepositories$ | async); as result) {
+  <div class="p-6 rounded-md shadow-md w-190 relative mx-auto border-1 border-solid border-accent">
+    @if (result.userError) {
+    <p class="text-danger">{{ result.userError }}</p>
+    }
+    <div class="absolute -top-17 left-10 p-5 inset-shadow-md bg-primary rounded-md border-1 border-solid border-accent">
+      @if (result.user.avatar_url) {
+      <img [src]="result.user.avatar_url" class="rounded-md w-24 h-24 object-fit">
       } @else {
-      <img src="/user-profile.svg" class="rounded-md w-24 h-24 object-cover">
+      <img src="/result.user-profile.svg" class="rounded-md w-24 h-24 object-cover">
       }
     </div>
 
     <div class="pt-16">
       <h3 class="text-lg font-semibold text-font-dark mb-1">
-        {{user.login}} - {{user.type | titlecase}} User
+        {{result.user.login}} - {{result.user.private_or_public | titlecase}} result.user
       </h3>
       <div class="flex gap-6">
         <div>
           <p class="text-sm text-font">
-            {{user.public_repos}} public repositories
+            {{result.user.public_repos}} public repositories
           </p>
           <p class="text-sm text-font mb-4">
-            {{user.total_private_repos ?? 0}} private repositories
+            {{result.user.total_private_repos ?? 0}} private repositories
           </p>
         </div>
         <div>
           <p class="text-sm text-font">
-            {{user.followers}} followers
+            {{result.user.followers}} followers
           </p>
           <p class="text-sm text-font mb-4">
-            {{user.following || 0}} following
+            {{result.user.following || 0}} following
           </p>
         </div>
       </div>
       <div
-        class="flex flex-col gap-2 mb-4 max-h-70 overflow-x-scroll inset-shadow-md rounded-md p-3 border-1 border-solid border-accent"
-      >
-        @for (repository of user.repositories; track repository.id) {
+        class="flex flex-col gap-2 mb-4 max-h-70 overflow-x-scroll inset-shadow-md rounded-md p-3 border-1 border-solid border-accent">
+        @if (result.repoError) {
+        <p class="text-danger">{{ result.repoError }}</p>
+        }
+        @for (repository of result.repositories; track repository.id) {
         <a [href]="repository.html_url" target="_blank">
           <div
-            class="p-2 shadow-md-short rounded-md p-3 border-1 border-solid border-accent flex gap-3 hover:shadow-none hover:shadow-md active:inset-shadow-md justify-between"
-          >
+            class="p-2 shadow-md-short rounded-md p-3 border-1 border-solid border-accent flex gap-3 hover:shadow-none hover:shadow-md active:inset-shadow-md justify-between">
             <div class="flex items-center">
               <p>
                 [{{repository.full_name}} |
-                <span
-                  [class]="{
+                <span [class]="{
                             'text-danger': repository.private,
                             'text-success': !repository.private
-                          }"
-                >
+                          }">
                   {{ repository.private ? 'private' : 'public' }}
                 </span>]
               </p>

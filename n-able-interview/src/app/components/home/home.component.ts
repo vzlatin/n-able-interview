@@ -15,7 +15,6 @@ export class HomeComponent implements OnInit {
   private router = inject(Router);
 
   userCards$ = this.githubService.userCards$;
-  usersError$ = this.githubService.userCardsError$;
 
   goToUser(username: string): void {
     this.router.navigate(["users", username]);
