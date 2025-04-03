@@ -1,13 +1,4 @@
 <div class="flex flex-col items-center gap-10">
-  <div>
-    <input
-      type="text"
-      name="search"
-      placeholder="Search"
-      class="bg-color-primary bg-[url(/search.svg)] bg-no-repeat inset-shadow-md rounded-md pl-8 pr-5 py-2 bg-[0.3rem_center] font-regular color-font border-1 border-solid border-accent"
-    />
-  </div>
-
   @if ((userCards$ | async); as userCards) {
     @if (userCards.length > 0) {
       <div class="grid grid-cols-2 gap-10">
