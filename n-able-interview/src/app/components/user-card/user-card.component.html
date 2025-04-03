@@ -1,6 +1,5 @@
-<div class="w-120 max-w-120 shadow-md-short primary rounded-md p-8 flex flex-row gap-10 items-center hover:shadow-none hover:shadow-md active:inset-shadow-md hover:cursor-pointer border-1 border-solid border-accent"
-  (click)="selectUser()"
->
+<div #userCardDiv class="w-120 max-w-120 shadow-md-short primary rounded-md p-8 flex flex-row gap-10 items-center hover:shadow-none hover:shadow-md active:inset-shadow-md hover:cursor-pointer border-1 border-solid border-accent"
+  (click)="selectUser()" appVisible [userId]="userCard().id" [isLast]="isLast()" (lastUserVisible)="emitSince($event)">
   <div class="flex flex-col items-center p-5">
     @if (!userCard().avatar_url) {
     <img src="/user-profile.svg" class="rounded-md" />
@@ -20,3 +19,4 @@
       </a>
   </div>
 </div>
+
