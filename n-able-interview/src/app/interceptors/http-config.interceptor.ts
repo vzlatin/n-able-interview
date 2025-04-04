@@ -6,7 +6,7 @@ import {
 import { environment } from "../../environments/environment.development";
 import { inject } from "@angular/core";
 import { LoaderService } from "../services/loader.service";
-import { tap } from "rxjs";
+import { finalize, tap } from "rxjs";
 
 export const httpConfigInterceptor: HttpInterceptorFn = (req, next) => {
   const loaderService = inject(LoaderService);
@@ -26,8 +26,10 @@ export const httpConfigInterceptor: HttpInterceptorFn = (req, next) => {
       },
       error: () => {
         loaderService.HideLoader();
-      }
-    })
+      },
+    }),
+    finalize(() => {
+      loaderService.HideLoader();
+    }),
   );
-  
 };

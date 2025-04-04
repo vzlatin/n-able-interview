@@ -1,7 +1,7 @@
 import { Component, inject } from "@angular/core";
 import { AsyncPipe, TitleCasePipe } from "@angular/common";
 import { ActivatedRoute } from "@angular/router";
-import { map } from "rxjs";
+import { map, tap } from "rxjs";
 
 @Component({
   selector: "app-user-profile",
@@ -13,5 +13,9 @@ export class UserProfileComponent {
   private activatedRoute = inject(ActivatedRoute);
   userWithRepositories$ = this.activatedRoute.data.pipe(
     map((data) => data["userWithRepositories"]),
+  ).pipe(
+    tap(
+      console.log,
+    ),
   );
 }

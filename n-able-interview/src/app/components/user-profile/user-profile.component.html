@@ -1,20 +1,29 @@
 <div class="h-screen flex items-center justify-center">
   @if ((userWithRepositories$ | async); as result) {
-  <div class="p-6 rounded-md shadow-md w-190 relative mx-auto border-1 border-solid border-accent">
-    @if (result.userError) {
-    <p class="text-danger">{{ result.userError }}</p>
-    }
-    <div class="absolute -top-17 left-10 p-5 inset-shadow-md bg-primary rounded-md border-1 border-solid border-accent">
+  <div
+    class="p-6 rounded-md shadow-md w-190 relative mx-auto border-1 border-solid border-accent"
+  >
+    @if(!result.userError) {
+    <div
+      class="absolute -top-17 left-10 p-5 inset-shadow-md bg-primary rounded-md border-1 border-solid border-accent"
+    >
       @if (result.user.avatar_url) {
-      <img [src]="result.user.avatar_url" class="rounded-md w-24 h-24 object-fit">
+      <img
+        [src]="result.user.avatar_url"
+        class="rounded-md w-24 h-24 object-fit"
+      >
       } @else {
-      <img src="/result.user-profile.svg" class="rounded-md w-24 h-24 object-cover">
+      <img
+        src="/result.user-profile.svg"
+        class="rounded-md w-24 h-24 object-cover"
+      >
       }
     </div>
 
     <div class="pt-16">
       <h3 class="text-lg font-semibold text-font-dark mb-1">
-        {{result.user.login}} - {{result.user.private_or_public | titlecase}} result.user
+        {{result.user.login}} - {{result.user.private_or_public | titlecase}}
+        result.user
       </h3>
       <div class="flex gap-6">
         <div>
@@ -35,21 +44,23 @@
         </div>
       </div>
       <div
-        class="flex flex-col gap-2 mb-4 max-h-70 overflow-x-scroll inset-shadow-md rounded-md p-3 border-1 border-solid border-accent">
-        @if (result.repoError) {
-        <p class="text-danger">{{ result.repoError }}</p>
-        }
-        @for (repository of result.repositories; track repository.id) {
+        class="flex flex-col gap-2 mb-4 max-h-70 overflow-x-scroll inset-shadow-md rounded-md p-3 border-1 border-solid border-accent"
+      >
+        @if (!result.repoError) { @for (repository of result.repositories; track
+        repository.id) {
         <a [href]="repository.html_url" target="_blank">
           <div
-            class="p-2 shadow-md-short rounded-md p-3 border-1 border-solid border-accent flex gap-3 hover:shadow-none active:inset-shadow-md justify-between">
+            class="p-2 shadow-md-short rounded-md p-3 border-1 border-solid border-accent flex gap-3 hover:shadow-none active:inset-shadow-md justify-between"
+          >
             <div class="flex items-center">
               <p>
                 [{{repository.full_name}} |
-                <span [class]="{
+                <span
+                  [class]="{
                             'text-danger': repository.private,
                             'text-success': !repository.private
-                          }">
+                          }"
+                >
                   {{ repository.private ? 'private' : 'public' }}
                 </span>]
               </p>
@@ -64,9 +75,18 @@
             </div>
           </div>
         </a>
+        } } @else {
+        <div>
+          <p class="text-danger">{{result.repoError}}</p>
+        </div>
         }
       </div>
     </div>
+    }@else {
+    <div>
+      <p class="text-danger">{{result.userError}}</p>
+    </div>
+    }
   </div>
   }
 </div>

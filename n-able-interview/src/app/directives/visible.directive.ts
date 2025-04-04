@@ -8,7 +8,7 @@ import {
   OnInit,
   output,
 } from "@angular/core";
-import { debounceTime, distinctUntilChanged, filter, Subject } from "rxjs";
+import { filter, Subject, switchMap, timer } from "rxjs";
 
 @Directive({
   selector: "[appVisible]",
@@ -64,10 +64,13 @@ export class VisibleDirective implements OnInit, AfterViewInit, OnDestroy {
     this.observer.observe(this.hostElement.nativeElement);
 
     this.observer$.pipe(
-      debounceTime(this.debounceMs),
-      distinctUntilChanged(),
-      filter(Boolean), // kinda redundant
       filter(() => this.isLast()),
+      switchMap(({ entry, observer }) =>
+        timer(this.debounceMs).pipe(
+          filter(() => entry.isIntersecting),
+          map(() => ({ entry, observer })),
+        )
+      ),
     ).subscribe(({ entry, observer }) => {
       this.lastUserVisible.emit(this.userId().toString());
       observer.unobserve(entry.target);
