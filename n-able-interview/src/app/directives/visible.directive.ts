@@ -8,7 +8,7 @@ import {
   OnInit,
   output,
 } from "@angular/core";
-import { filter, Subject, switchMap, timer } from "rxjs";
+import { filter, map, Subject, switchMap, timer } from "rxjs";
 
 @Directive({
   selector: "[appVisible]",
